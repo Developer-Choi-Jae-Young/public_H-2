@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="replyMapper">  
+	
+	<resultMap id="replyDtoResultSet" type="ReplyDto">
+		<result column="RNO" property="replyNo" />
+		<result column="BNO" property="boardNo" />
+		<result column="MNICKNAME" property="memberName" />
+		<result column="RDATE" property="replayDate" />
+		<result column="RCOMPLAINT" property="replyComplainCount" />
+		<result column="RCONTENT" property="replyContent" />
+		<result column="PARENT_RNO" property="parentReplyNo" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+		
+	<select id="selectReplyList" resultMap="replyDtoResultSet" parameterType="int">
+		SELECT RNO, BNO, MNICKNAME, RDATE, RCOMPLAINT, RCONTENT, PARENT_RNO, R.STATUS FROM Reply R JOIN Member M ON (R.MNO = M.MNO) WHERE BNO = #{boardId}
+	</select>
+	
+	<insert id="insertReply" parameterType="Reply">
+		INSERT INTO Reply(RNO, BNO, MNO, RCOMPLAINT, RCONTENT, PARENT_RNO) VALUES(SEQ_RNO.NEXTVAL, #{boardNo}, #{memberNo}, #{replyComplainCount}, #{replyContent}, #{parentReplyNo})
+	</insert>
+	
+	<insert id="insertReplyParent" parameterType="Reply">
+		INSERT INTO Reply(RNO, BNO, MNO, RCOMPLAINT, RCONTENT, PARENT_RNO) VALUES(SEQ_RNO.NEXTVAL, #{boardNo}, #{memberNo}, #{replyComplainCount}, #{replyContent}, NULL)
+	</insert>
+	
+	<update id="deleteReply" parameterType="hashmap">
+		UPDATE Reply SET STATUS = 'Y' WHERE RNO = #{replyId} AND BNO = #{boardId}
+	</update>
+	
+	<update id="updateReply" parameterType="hashmap">
+		UPDATE Reply SET RCONTENT = #{content} WHERE RNO = #{replyId} AND BNO = #{boardId}
+	</update>
+	
+</mapper>

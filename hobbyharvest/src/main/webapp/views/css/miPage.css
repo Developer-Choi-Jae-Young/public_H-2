@@ -1,0 +1,145 @@
+@charset "UTF-8";
+
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#bodySection {
+	margin: auto;
+	height: 80%;
+	width: 70%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	width: 100%;
+	max-width: 600px;
+	border-radius: 10px;
+	border: 1px solid lightgray;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.title-area {
+	border: 1px solid #ccc;
+	padding: auto;
+	border-radius: 4px;
+	margin-top: 20px;
+}
+
+label {
+	display: block;
+	font-size: 16px;
+	margin: auto;
+}
+
+.display-title {
+	width: 100%;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 4px;
+	border: none;
+}
+
+.display-date {
+	text-align: center;
+	width: 100%;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 4px;
+	border: none;
+}
+
+#content {
+	resize: none;
+}
+
+.input-content {
+	width: 100%;
+	height: 400px;
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	margin-top: 0px;
+}
+
+.file-output {
+	display: flex;
+	align-items: center;
+	border: 1px solid lightgray;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	margin-bottom: 0px;
+}
+
+.file-output>span {
+	width: 15%;
+	text-align: center;
+}
+
+.file-output ul {
+	margin: auto;
+	margin-left: 10px;
+	padding: 6px 12px;
+	border-radius: 4px;
+	width: 85%;
+	border: 1px solid #ccc;
+	list-style: none;
+	padding-left: 0px;
+}
+
+.scroll-list {
+	max-height: 40px; /* 한 줄 높이에 맞게 설정 (필요에 따라 조정 가능) */
+	overflow-y: scroll; /* 스크롤 생성 */
+	padding: 0;
+	margin: 0;
+	list-style-type: none; /* 불필요한 기본 스타일 제거 */
+}
+
+.scroll-list li {
+	padding: 5px 0; /* 각 항목 간격 */
+}
+
+.scroll-list li>a {
+	padding: 5px 0; /* 각 항목 간격 */
+	color: black;
+	text-decoration: none;
+}
+
+.button-group {
+	float: right;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.cancel-button, .save-button {
+	padding: 10px 20px;
+	font-size: 14px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.cancel-button {
+	background-color: #e0e0e0;
+}
+
+.save-button {
+	background-color: #add8e6;
+}
+
+.cancel-button:hover, .save-button:hover {
+	opacity: 0.8;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="smallGroupMapper">
+	<resultMap id="SmallGroupResultSet" type="SmallGroup">
+	  	<result column="sgno" property="smallGroupNo"/>
+	  	<result column="sgname" property="smallGroupName" />
+  	</resultMap>
+	
+	<select id="selectSmallGroupList" resultMap="SmallGroupResultSet">
+		SELECT * FROM SmallGroup
+	</select>
+  	
+  	<select id="selectSmallGroup" resultMap="SmallGroupResultSet" parameterType="String">
+		SELECT * FROM SmallGroup WHERE SGNAME = #{smallGroupName}
+	</select>
+  	
+</mapper>

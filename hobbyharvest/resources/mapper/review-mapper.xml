@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reviewMapper">  
+	
+	<resultMap id="reviewDtoResultSet" type="ReviewDto">
+		<result column="RVNO" property="reviewNo" />
+		<result column="MNICKNAME" property="memberName" />
+		<result column="RCNO" property="recommandNo" />
+		<result column="STAR" property="starNo" />
+		<result column="BTITLE" property="title" />
+		<result column="BCONTENT" property="content" />
+	</resultMap>
+		
+	<select id="selectReviewList" resultMap="reviewDtoResultSet" parameterType="int">
+		SELECT R.RVNO, M.MNICKNAME, R.RCNO, R.STAR, B.BTITLE, B.BCONTENT FROM BoardReview BR 
+                             JOIN Board B ON(BR.BNO = B.BNO)
+                             JOIN Review R ON (R.RVNO = BR.RVNO)
+                             JOIN Member M ON (M.MNO = B.MNO) WHERE R.BNO = #{boardNo}
+	</select>
+	
+	<insert id="insertReview" parameterType="Review">
+		INSERT INTO Review(RVNO, KBNO, RCNO, STAR, BNO) VALUES(SEQ_RVNO.NEXTVAL, #{kindOfBoardNo}, #{recommandNo}, #{startNo}, #{boardNo})
+		<selectKey resultType="java.lang.Integer" keyProperty="reviewNo" order="AFTER">
+            SELECT SEQ_RVNO.CURRVAL FROM DUAL
+    	</selectKey>		
+	</insert>
+	
+	<update id="updateReview" parameterType="hashMap">
+		UPDATE Review SET RCNO = #{recommandNo} WHERE RVNO = #{reviewNo}
+	</update>
+	
+	<select id="selectReviewByRecommand" resultType="int" parameterType="int">
+		SELECT RCNO FROM Review WHERE RVNO = #{reviewNo}
+	</select>
+	
+	<select id="bestReview" resultMap="reviewDtoResultSet">
+		<![CDATA[
+		SELECT ROWNUM, RVNO, MNICKNAME, RCNO, STAR, BTITLE, BCONTENT
+		FROM ( SELECT
+		R.RVNO, M.MNICKNAME, R.RCNO, R.STAR, B.BTITLE, B.BCONTENT FROM BoardReview BR 
+		                             JOIN Board B ON(BR.BNO = B.BNO)
+		                             JOIN Review R ON (R.RVNO = BR.RVNO)
+		                             JOIN Member M ON (M.MNO = B.MNO)
+		                             ORDER BY R.RCNO DESC
+		                             )
+		                             WHERE ROWNUM <= 5
+		]]>
+	</select>
+</mapper>

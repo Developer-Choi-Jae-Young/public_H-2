@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="calendarMapper">  
+	
+	<insert id="insertCalender" parameterType="Calender">
+		INSERT INTO Calendar(CALNO, KBNO, ST_SCHEDULE, EN_SCHEDULE) VALUES(SEQ_CALNO.NEXTVAL, #{kindOfBoardNo}, #{startDate}, #{endDate})
+		<selectKey resultType="java.lang.Integer" keyProperty="calenderNo" order="AFTER">
+            SELECT SEQ_CALNO.CURRVAL FROM DUAL
+    	</selectKey>		
+	</insert>
+	
+	<update id="updateCalender" parameterType="hashmap">
+		UPDATE Calendar SET ST_SCHEDULE = #{startDate}, EN_SCHEDULE = #{endDate}  WHERE CALNO = #{calenderNo}
+	</update>
+</mapper>

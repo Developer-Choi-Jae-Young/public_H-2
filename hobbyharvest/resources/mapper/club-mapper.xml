@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="clubMapper">
+  
+  <resultMap id="clubResultSet" type="Club">
+  	<result column="CNO" property="clubNo"/>
+  	<result column="CNAME" property="clubName"/>
+  </resultMap>
+  
+  <insert id="insertClub" parameterType="Club">
+    INSERT INTO Club(CNO, CNAME) VALUES(SEQ_CNO.NEXTVAL, #{clubName})
+  </insert>
+
+  <select id="selectClub" resultMap="clubResultSet">
+  	SELECT * FROM Club
+  </select>  
+
+  <select id="selectClubName" resultType="String" parameterType="int">
+  	SELECT CNAME FROM Club WHERE CNO = #{clubId}
+  </select>  
+	
+  <update id="updateClub" parameterType="hashmap">
+  	UPDATE Club SET CNAME = #{clubName} WHERE CNO = #{clubNo}
+  </update>
+</mapper>

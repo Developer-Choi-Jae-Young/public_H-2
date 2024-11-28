@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kindOfBoardMapper">
+	
+	<resultMap id="KindOfBoardResultSet" type="KindOfBoard">
+	  	<result column="KBNO" property="kindOfBoardNo"/>
+	  	<result column="KBNAME" property="kindOfBoardName"/>
+  	</resultMap>
+  
+  	<select id="selectKindOfBoardList" resultMap="KindOfBoardResultSet">
+  		SELECT * FROM KindOfBoard
+  	</select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="smallGroupCategoryMapper">
+	<resultMap id="SmallGroupCategoryMapperResultSet" type="SmallGroupCategory">
+	  	<result column="sgcno" property="smallGroupCategoryNo"/>
+	  	<result column="sgno" property="smallGroupNo" />
+	  	<result column="cateno" property="categoryNo" />
+  	</resultMap>
+	
+	<select id="selectSmallGroupCategoryList" resultMap="SmallGroupCategoryMapperResultSet">
+		SELECT * FROM SmallGroupCategory
+	</select>
+  	
+  	<select id="selectSmallGroupCategory" resultMap="SmallGroupCategoryMapperResultSet" parameterType="SelectGroupCategoryDto">
+		SELECT * FROM SmallGroupCategory WHERE SGNO = #{smallGroupId} AND CATENO = #{categoryId}
+	</select>
+  	
+  	<select id="selectSmallGroupName" resultType="String" parameterType="int">
+  		SELECT SGNAME FROM SmallGroupCategory SGC JOIN SmallGroup SG ON (SGC.SGCNO = SG.SGNO) WHERE SGCNO = #{selectSmallGroupName};
+  	</select>
+</mapper>

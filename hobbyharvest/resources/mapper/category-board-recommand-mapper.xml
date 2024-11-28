@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="categoryBoardRecommandMapper">
+	  <select id="selectCategoryBoardRecommand" resultType="int">
+	  	SELECT COUNT(*) FROM CategoryBoardRecommand
+	  </select>
+		
+	  <insert id="insertCategoryBoardRecommand" parameterType="CategoryBoardRecommand">
+	  	INSERT INTO CategoryBoardRecommand VALUES (SEQ_CBRNO.NEXTVAL, #{memberNo} , #{categoryNo})
+	  </insert>
+		
+	  <delete id="deleteCategoryBoardRecommand" parameterType="hashmap">
+	  	DELETE FROM CategoryBoardRecommand WHERE MNO = #{memberNo} AND CBNO = #{categoryNo}
+	  </delete>  
+	  
+	  <select id="selectCategoryBoardRecommandByUserNo" resultType="int" parameterType="hashmap">
+	  	SELECT COUNT(*) FROM CategoryBoardRecommand WHERE MNO = #{memberNo} AND CBNO = #{categoryNo}
+	  </select>
+	  
+</mapper>

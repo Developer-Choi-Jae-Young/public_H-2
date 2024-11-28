@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bookCategoryMapper">  
+	
+		<select id="selectBookCategory" resultType="int">
+			SELECT COUNT(*) FROM BookCategory
+		</select>
+		
+		<insert id="insertBookCategory" parameterType="BookCategory">
+			INSERT INTO BookCategory VALUES (SEQ_BCNO.NEXTVAL, #{categoryNo} , #{memberNo})
+		</insert>
+		
+		<delete id="deleteBookCategory" parameterType="hashmap">
+			DELETE FROM BookCategory WHERE MNO = #{memberNo} AND CBNO = #{categoryNo}
+		</delete>
+		
+		<select id="selectBookCategoryByUserNo" resultType="int" parameterType="hashmap">
+			SELECT COUNT(*) FROM BookCategory WHERE MNO = #{memberNo} AND CBNO = #{categoryNo}
+		</select>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberMapper">
+  <resultMap id="memberResultSet" type="Member">
+	<result column="mno" property="userNo" />
+	<result column="mid" property="userId" />
+	<result column="mpw" property="userPw" />
+	<result column="mnickname" property="nickName" />
+	<result column="memail" property="email" />
+	<result column="maddress" property="address" />
+	<result column="mphone" property="phone" />	
+  </resultMap>
+  
+  <select id="loginMember" resultMap="memberResultSet">
+  	SELECT *
+  	FROM MEMBER
+  	WHERE MID = #{userId} AND MPW = #{userPw} AND STATUS = 'Y'
+  </select>
+  
+  <select id="idCheck" resultType="_int">
+	SELECT COUNT(*) COUNT
+	FROM MEMBER
+	WHERE MID = #{userId}
+  </select>
+  
+  <insert id="joinMember" parameterType="Member">
+  	INSERT INTO MEMBER
+  		VALUES (SEQ_MNO.NEXTVAL,
+  				#{userId},
+  				#{userPw},
+  				#{nickName},
+  				#{email},
+  				#{address},
+  				#{phone},
+  				DEFAULT)
+  </insert>
+
+  <delete id="deleteMember" parameterType="Member">
+  	UPDATE MEMBER
+  	SET STATUS = 'N'
+  	WHERE MID = #{userId} AND MPW = #{userPw}
+  </delete>
+  
+  <update id="updateMember" parameterType="Member">
+	UPDATE MEMBER
+	SET MID = #{userId}, MEMAIL = #{email}, MPHONE = #{phone}, MADDRESS = #{address}
+	WHERE MID = #{userId}
+  </update>
+  <select id="searchId" resultType="string">
+		SELECT MID
+		FROM MEMBER
+		WHERE MEMAIL = #{email}
+	</select>
+	
+	<update id="updatePassword">
+		UPDATE MEMBER
+		SET MPW = #{newUserPw}
+		WHERE MID = #{userId} AND MPW = #{userPw}
+	</update>
+	
+	<select id="selectMemberByUserId" resultMap="memberResultSet">
+        SELECT * 
+		  FROM MEMBER
+		 WHERE MID = #{userId}
+	</select>
+	
+	
+	
+</mapper>

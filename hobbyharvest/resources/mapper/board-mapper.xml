@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardMapper">  
+  <resultMap id="selectCategoryBoardListResultSet" type="SelectCategoryBoardListDto">
+	  	<result column="BNO" property="boardNo"/>
+	  	<result column="CBNO" property="categoryBoardNo"/>
+	  	<result column="CNAME" property="clubName" />
+	  	<result column="CNO" property="clubNo" />
+	  	<result column="MNICKNAME" property="memberNicname" />
+	  	<result column="MNO" property="memberNo" />
+	  	<result column="SGNAME" property="smallGroupName" />
+	  	<result column="CATENAME" property="categoryName" />
+	  	<result column="BTITLE" property="boardTitle" />
+	  	<result column="BDATE" property="boardDate" />
+	  	<result column="BCONTENT" property="boardContent" />
+	  	<result column="RCNO" property="recommandNo" />
+	  	<result column="COMPLAIN" property="complain" />
+	  	<result column="VIEWS" property="views" />
+	  	<result column="SCRAP" property="scrap" />
+	  	<result column="CBIMG" property="categoryBoardImage" />
+	  	<result column="MAX_COUNT" property="maxCount" />
+	  	<result column="CUR_COUNT" property="currentCount" />
+  	</resultMap>
+  	
+  	<resultMap id="selectCalenderBoardListResultSet" type="CalenderDto">
+	  	<result column="BNO" property="boardNo"/>
+	  	<result column="CALNO" property="calenderNo"/>
+	  	<result column="MNO" property="memberNo"/>
+	  	<result column="CBNO" property="categoryBoardNo" />
+	  	<result column="BTITLE" property="title" />
+	  	<result column="BCONTENT" property="content" />
+	  	<result column="ST_SCHEDULE" property="startDate" />
+	  	<result column="EN_SCHEDULE" property="endDate" />
+  	</resultMap>
+
+	<!-- 내 모임 게시판 리스트 조회 -->
+	<resultMap id="mySocialSet" type="MySocial">
+		<result column="btitle" property="title" />
+		<result column="bcontent" property="description" />
+		<result column="bno" property="boardNo" />
+		<result column="cbimg" property="img" />
+	</resultMap>
+	
+	<!-- 내가 스크랩한 게시판 리스트 조회 -->
+	<resultMap id="myBookmarkSet" type="MyBookmark">
+		<result column="bno" property="boardNo" />
+		<result column="btitle" property="title" />
+		<result column="bcontent" property="description" />
+		<result column="cbimg" property="img" />
+	</resultMap>
+
+	<!-- 내가 댓글 쓴 게시판 리스트 조회 -->
+	<resultMap id="myReplySet" type="MyReply">
+		<result column="btitle" property="title" />
+		<result column="Rcontent" property="reply" />
+		<result column="bno" property="boardNo" />
+		<result column="cbimg" property="img" />
+		<result column="rdate" property="createDate" />
+	</resultMap>
+	
+	
+
+	<insert id="insertBoard" parameterType="Board">
+		INSERT INTO Board(BNO, MNO, KBNO, BTITLE, BCONTENT) VALUES
+		(SEQ_BNO.NEXTVAL, #{memberNo}, #{kindOfBoardNo}, #{title}, #{content})
+		<selectKey resultType="java.lang.Integer"
+			keyProperty="boardNo" order="AFTER">
+			SELECT SEQ_BNO.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<select id="selectCategoryBoardList"
+		resultMap="selectCategoryBoardListResultSet" parameterType="hashmap">
+  <![CDATA[
+	 SELECT * FROM (SELECT B.BNO, CB.CBNO, CNAME, C.CNO, MNICKNAME, M.MNO, SGNAME, CATENAME, B.BTITLE, B.BDATE, B.BCONTENT, RCNO, COMPLAIN, VIEWS, SCRAP, CBIMG, MAX_COUNT, CUR_COUNT, ROWNUM AS RN
+	            FROM Board B JOIN BoardCategoryBoard BCB ON (B.BNO = BCB.BNO)
+	                      JOIN CategoryBoard CB ON (CB.CBNO = BCB.CBNO)
+	                      JOIN KindOfBoard KB ON (CB.KBNO = KB.KBNO)
+	                      JOIN Member M ON (B.MNO = M.MNO)
+	                      JOIN Club C ON (C.CNO = CB.CNO)
+	                      JOIN SmallGroupCategory SGC ON (CB.SGCNO = SGC.SGCNO)
+	                      JOIN SmallGroup SG ON (SG.SGNO = SGC.SGNO)
+	                      JOIN Category CE ON (CE.CATENO = SGC.CATENO)
+	                      WHERE KB.KBNO = 1 AND B.STATUS = 'N' AND CE.CATENO = #{categoryNo} ORDER BY B.BNO) WHERE RN >= #{startNum} AND RN <= #{endNum}
+  ]]>
+  </select>
+  
+  <select id="selectCategoryBoardListKeyword" resultMap="selectCategoryBoardListResultSet" parameterType="hashmap">
+  <![CDATA[
+	 SELECT * FROM (SELECT B.BNO, CB.CBNO, CNAME, C.CNO, MNICKNAME, M.MNO, SGNAME, CATENAME, B.BTITLE, B.BDATE, B.BCONTENT, RCNO, COMPLAIN, VIEWS, SCRAP, CBIMG, MAX_COUNT, CUR_COUNT, ROWNUM AS RN
+	            FROM Board B JOIN BoardCategoryBoard BCB ON (B.BNO = BCB.BNO)
+	                      JOIN CategoryBoard CB ON (CB.CBNO = BCB.CBNO)
+	                      JOIN KindOfBoard KB ON (CB.KBNO = KB.KBNO)
+	                      JOIN Member M ON (B.MNO = M.MNO)
+	                      JOIN Club C ON (C.CNO = CB.CNO)
+	                      JOIN SmallGroupCategory SGC ON (CB.SGCNO = SGC.SGCNO)
+	                      JOIN SmallGroup SG ON (SG.SGNO = SGC.SGNO)
+	                      JOIN Category CE ON (CE.CATENO = SGC.CATENO)
+	                      WHERE B.BTITLE LIKE '%' ||  #{keyword} || '%' AND KB.KBNO = 1 AND B.STATUS = 'N' AND CE.CATENO = #{categoryNo} ORDER BY B.BNO) WHERE RN >= #{startNum} AND RN <= #{endNum}
+  ]]>
+  </select>
+  
+  <select id="selectCategoryBoard" resultMap="selectCategoryBoardListResultSet" parameterType="int">
+  SELECT B.BNO, CB.CBNO, CNAME, C.CNO, MNICKNAME, M.MNO, SGNAME, CATENAME, B.BTITLE, B.BDATE, B.BCONTENT, RCNO, COMPLAIN, VIEWS, SCRAP, CBIMG, MAX_COUNT, CUR_COUNT
+            FROM Board B JOIN BoardCategoryBoard BCB ON (B.BNO = BCB.BNO)
+                      JOIN CategoryBoard CB ON (CB.CBNO = BCB.CBNO)
+                      JOIN KindOfBoard KB ON (CB.KBNO = KB.KBNO)
+                      JOIN Member M ON (B.MNO = M.MNO)
+                      JOIN Club C ON (C.CNO = CB.CNO)
+                      JOIN SmallGroupCategory SGC ON (CB.SGCNO = SGC.SGCNO)
+                      JOIN SmallGroup SG ON (SG.SGNO = SGC.SGNO) 
+                      JOIN Category C ON (C.CATENO = SGC.CATENO) 
+                      WHERE KBNO = 1 AND B.BNO = #{boardId} AND B.STATUS = 'N'
+  </select>
+  
+  <select id="selectCalenderBoardList" resultMap="selectCalenderBoardListResultSet" parameterType="int">
+ 	SELECT B.BNO, C.CALNO, B.MNO, CB.CBNO, B.BTITLE, B.BCONTENT, C.ST_SCHEDULE, C.EN_SCHEDULE FROM CalendarCategoryBoard CCB 
+            JOIN Calendar C ON (CCB.CALNO = C.CALNO)
+            JOIN CategoryBoard CB ON (CB.CBNO = CCB.CBNO)
+            JOIN BoardCalendar BC ON (BC.CALNO = C.CALNO)
+            JOIN Board B ON (B.BNO = BC.BNO) WHERE CB.CBNO = #{categoryBoardNo} AND B.STATUS = 'N'
+  </select>
+  
+  <select id="selectCalenderBoardListByBoardNo" resultMap="selectCalenderBoardListResultSet" parameterType="int">
+ 	SELECT B.BNO, C.CALNO, B.MNO, CB.CBNO, B.BTITLE, B.BCONTENT, C.ST_SCHEDULE, C.EN_SCHEDULE FROM CalendarCategoryBoard CCB 
+            JOIN Calendar C ON (CCB.CALNO = C.CALNO)
+            JOIN CategoryBoard CB ON (CB.CBNO = CCB.CBNO)
+            JOIN BoardCalendar BC ON (BC.CALNO = C.CALNO)
+            JOIN Board B ON (B.BNO = BC.BNO) WHERE B.BNO = #{boardNo} AND B.STATUS = 'N'
+  </select>
+  
+  <update id="deleteCategoryBoard" parameterType="int">
+  	UPDATE Board SET STATUS = 'Y' WHERE BNO = #{boardNo}
+  </update>
+  
+  <update id="updateBoard" parameterType="hashmap">
+  	UPDATE Board SET BCONTENT = #{content}, BTITLE = #{title} WHERE BNO = #{boardNo}
+  </update>
+
+
+
+	<!-- 참여한 소모임 리스트 조회 -->
+	<select id="selectMySocial" resultMap="mySocialSet">
+		SELECT DISTINCT(BNO),
+		BTITLE, BCONTENT, CBIMG
+		FROM CATEGORYBOARD
+		JOIN BOARDCATEGORYBOARD USING
+		(CBNO)
+		JOIN BOARD USING (BNO)
+		WHERE STATUS = 'N' AND CNO IN (
+		SELECT CNO
+		FROM MEMBERCLUB
+		WHERE MNO = #{userNo}
+		)
+		ORDER BY BNO
+	</select>
+	<!-- 참여한 소모임 갯수 조회 -->
+	<select id="selectMySocialCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM
+		CATEGORYBOARD
+		JOIN BOARDCATEGORYBOARD USING (CBNO)
+		JOIN BOARD USING
+		(BNO)
+		WHERE STATUS = 'N' AND CNO IN (
+		SELECT CNO
+		FROM MEMBERCLUB
+		WHERE MNO = #{userNo}
+		)
+	</select>
+	<!-- ************************************************************ -->
+
+	<!-- 댓글 작성한 소모임 리스트 -->
+	<select id="myReply" resultMap="myReplySet">
+		SELECT B.BTITLE, RCONTENT, A.BNO, CBIMG, TO_CHAR(RDATE, 'YYYY-MM-DD') RDATE
+		FROM REPLY A
+			JOIN BOARD B ON (A.BNO = B.BNO)
+			JOIN BOARDCATEGORYBOARD C ON (B.BNO = C.BNO)
+			JOIN CATEGORYBOARD D ON (C.CBNO = D.CBNO)
+		WHERE A.MNO = #{userNo} AND A.STATUS='N' AND B.STATUS='N'
+	</select>
+	<!-- 댓글 작성한 소모임 갯수 -->
+	<select id="selectMyReplyCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REPLY A
+			JOIN BOARD B ON (A.BNO = B.BNO)
+			JOIN BOARDCATEGORYBOARD C ON (B.BNO = C.BNO)
+			JOIN CATEGORYBOARD D ON (C.CBNO = D.CBNO)
+		WHERE A.MNO = #{userNo} AND A.STATUS='N' AND B.STATUS='N'
+	</select>
+	<!-- ************************************************************ -->
+
+	<!-- 북마크한 소모임 리스트 -->
+	<select id="MyBookmark" resultMap="myBookmarkSet">
+		SELECT D.BNO, D.BTITLE, D.BCONTENT, B.CBIMG
+		FROM BOOKCATEGORY A
+		    JOIN CATEGORYBOARD B ON (A.CBNO = B.CBNO)
+		    JOIN BOARDCATEGORYBOARD C ON (B.CBNO = C.CBNO)
+		    JOIN BOARD D ON (C.BNO = D.BNO)
+		WHERE A.MNO = #{userNo} AND D.STATUS = 'N'
+	</select>
+
+	<!-- 북마크한 소모임 갯수 -->
+	<select id="selectMyBookmarkCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOOKCATEGORY A
+		    JOIN CATEGORYBOARD B ON (A.CBNO = B.CBNO)
+		    JOIN BOARDCATEGORYBOARD C ON (B.CBNO = C.CBNO)
+		    JOIN BOARD D ON (C.BNO = D.BNO)
+		WHERE A.MNO = #{userNo} AND D.STATUS = 'N'
+	</select>
+	<!-- ************************************************************ -->
+	<!-- 1:1 문의 게시글 삽입/ board -->
+	<insert id="insertInquiryBoard" parameterType="InquiryBoardDto" useGeneratedKeys="true" keyColumn="BNO" keyProperty="boardNo" >
+		INSERT INTO BOARD(BNO, MNO, KBNO, BTITLE, BDATE, BCONTENT)
+		VALUES(SEQ_BNO.NEXTVAL, #{userNo}, #{kindOfBoard}, #{boardTitle}, SYSDATE, #{boardContent})
+	</insert>
+	<!-- 1:1문의 게시글 삽입/ Inquiry -->
+	<insert id="insertInqiryBoardUpfile" parameterType="InquiryBoardDto" useGeneratedKeys="true" keyColumn="INO" keyProperty="inquiryNo">
+		INSERT INTO INQUIRY(INO, IGNO, KBNO, ORGFILENAMES, CHGFILENAMES)
+		VALUES(SEQ_INO.NEXTVAL, #{inquiryGroup}, #{kindOfBoard}, #{originFileNames}, #{changeFileNames})
+	</insert>
+	<!-- 1:1문의 중간테이블 삽입/InquiryBoard -->
+	<insert id="insertInquiryBoardAll">
+	INSERT INTO BOARDINQUIRY(BINO, BNO, INO)
+		VALUES(SEQ_BINO.NEXTVAL , #{boardNo}, #{inquiryNo})
+	</insert>
+	
+	
+	<!-- ***************************************************************** -->
+	<!-- 1:1문의 리스트 갯수 조회 -->
+	<select id="inquiryListCount" resultType="_int">
+		SELECT COUNT(*) COUNT
+		FROM BOARDINQUIRY 
+    		LEFT JOIN INQUIRY USING(INO)
+    		LEFT JOIN BOARD USING(BNO)
+    		JOIN INQUIRYGROUP USING (IGNO)
+		WHERE MNO = #{userNo} AND STATUS = 'N'
+	</select>
+	
+	
+	<!--  1:1 문의 리스트 조회 -->
+	<resultMap id ="inquiryListSet" type="InquiryBoardDto">
+		<result column="bno" property="boardNo"/>
+		<result column="btitle" property="boardTitle"/>
+		<result column="bdate" property="createDate"/>
+		<result column="bcontent" property="boardContent"/>
+		<result column="kind_of_inquiry" property="inquiryGroupName"/>
+	</resultMap>
+	<select id="selectInquiryList" resultMap="inquiryListSet">
+		SELECT BNO, BTITLE, TO_CHAR(BDATE, 'YY-MM-DD') BDATE, BCONTENT, KIND_OF_INQUIRY
+		FROM BOARDINQUIRY
+    		LEFT JOIN INQUIRY USING(INO)
+    		LEFT JOIN BOARD USING(BNO)
+    		JOIN INQUIRYGROUP USING (IGNO)
+		WHERE MNO = #{userNo} AND STATUS = 'N'
+	</select>
+	
+	<!-- 1:1문의 상세페이지 데이터 조회 -->
+	<resultMap id="inquirySet" type="InquiryBoardDto">
+		<result column="bno" property="boardNo"/>
+		<result column="btitle" property="boardTitle"/>
+		<result column="bdate" property="createDate"/>
+		<result column="orgfilenames" property="originFileNames"/>
+		<result column="chgfilenames" property="changeFileNames"/>
+		<result column="bcontent" property="boardContent"/>
+	</resultMap>
+	<select id="selectInquiry" resultMap="inquirySet" parameterType="hashmap">
+	SELECT BNO, BTITLE, BDATE, ORGFILENAMES, CHGFILENAMES, BCONTENT
+	FROM BOARDINQUIRY
+    	JOIN BOARD USING(BNO)
+    	JOIN INQUIRY USING(INO)
+	WHERE MNO = #{userNo} AND BNO = #{boardNo}
+	</select>
+
+	<!-- ***************************************************************** -->
+	
+	<select id="bestClub" resultMap="selectCategoryBoardListResultSet">
+	  <![CDATA[
+			 SELECT ROWNUM,  BNO, CBNO, CNAME, CNO, MNICKNAME, MNO, SGNAME, CATENAME, BTITLE, BDATE, BCONTENT, RCNO, COMPLAIN, VIEWS, SCRAP, CBIMG, MAX_COUNT, CUR_COUNT
+     
+		     FROM (SELECT B.BNO, CB.CBNO, CNAME, C.CNO, MNICKNAME, M.MNO, SGNAME, CATENAME, B.BTITLE, B.BDATE, B.BCONTENT, RCNO, COMPLAIN, VIEWS, SCRAP, CBIMG, MAX_COUNT, CUR_COUNT
+			            FROM Board B JOIN BoardCategoryBoard BCB ON (B.BNO = BCB.BNO)
+			                      JOIN CategoryBoard CB ON (CB.CBNO = BCB.CBNO)
+			                      JOIN KindOfBoard KB ON (CB.KBNO = KB.KBNO)
+			                      JOIN Member M ON (B.MNO = M.MNO)
+			                      JOIN Club C ON (C.CNO = CB.CNO)
+			                      JOIN SmallGroupCategory SGC ON (CB.SGCNO = SGC.SGCNO)
+			                      JOIN SmallGroup SG ON (SG.SGNO = SGC.SGNO)
+			                      JOIN Category C ON (C.CATENO = SGC.CATENO)
+			                      WHERE KB.KBNO = 1 AND B.STATUS = 'N' ORDER BY RCNO DESC)
+		    WHERE ROWNUM <=5
+		]]>
+	</select>
+
+</mapper>

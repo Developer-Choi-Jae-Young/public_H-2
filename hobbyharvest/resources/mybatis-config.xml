@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.h2.chuizone.common.category.model.vo.Category" alias="Category"/>
+		<typeAlias type="com.h2.chuizone.category.model.vo.CategoryBoard" alias="CategoryBoard"/>
+		<typeAlias type="com.h2.chuizone.common.smallgroupcategory.model.dto.SelectGroupCategoryDto" alias="SelectGroupCategoryDto"/>
+		<typeAlias type="com.h2.chuizone.common.review.model.dto.ReviewDto" alias="ReviewDto"/>
+		<typeAlias type="com.h2.chuizone.common.smallgroup.model.vo.SmallGroup" alias="SmallGroup"/>
+		<typeAlias type="com.h2.chuizone.common.boardreview.model.vo.BoardReview" alias="BoardReview"/>
+		<typeAlias type="com.h2.chuizone.common.kindofboard.model.vo.KindOfBoard" alias="KindOfBoard"/>
+		<typeAlias type="com.h2.chuizone.common.review.model.vo.Review" alias="Review"/>
+		<typeAlias type="com.h2.chuizone.common.board.model.vo.Board" alias="Board"/>
+		<typeAlias type="com.h2.chuizone.common.boardcategoryboard.model.vo.BoardCategoryBoard" alias="BoardCategoryBoard"/>
+		<typeAlias type="com.h2.chuizone.common.club.model.vo.Club" alias="Club"/>
+		<typeAlias type="com.h2.chuizone.common.reply.model.vo.Reply" alias="Reply"/>
+		<typeAlias type="com.h2.chuizone.common.reply.model.dto.ReplyDto" alias="ReplyDto"/>
+		<typeAlias type="com.h2.chuizone.common.bookcategory.model.vo.BookCategory" alias="BookCategory"/>
+		<typeAlias type="com.h2.chuizone.common.categoryboardcomplain.model.vo.CategoryBoardComplain" alias="CategoryBoardComplain"/>
+		<typeAlias type="com.h2.chuizone.common.categoryboardrecommand.model.vo.CategoryBoardRecommand" alias="CategoryBoardRecommand"/>
+		<typeAlias type="com.h2.chuizone.common.smallgroupcategory.model.vo.SmallGroupCategory" alias="SmallGroupCategory"/>
+		<typeAlias type="com.h2.chuizone.category.model.dto.SelectCategoryBoardListDto" alias="SelectCategoryBoardListDto"/>
+		<typeAlias type="com.h2.chuizone.member.model.vo.Member" alias="Member" />
+		<typeAlias type="com.h2.chuizone.common.memberclub.model.vo.MemberClub" alias="MemberClub" />
+		<typeAlias type="com.h2.chuizone.common.memberreviewrecommand.model.vo.MemberReviewRecommand" alias="MemberReviewRecommand" />
+		<typeAlias type="com.h2.chuizone.mypage.model.vo.MySocial" alias="MySocial" />
+		<typeAlias type="com.h2.chuizone.mypage.model.vo.MyReply" alias="MyReply" />
+		<typeAlias type="com.h2.chuizone.mypage.model.vo.MyBookmark" alias="MyBookmark" />
+		<typeAlias type="com.h2.chuizone.calender.model.vo.Calender" alias="Calender" />
+		<typeAlias type="com.h2.chuizone.common.boardcalender.model.vo.BoardCalender" alias="BoardCalender" />
+		<typeAlias type="com.h2.chuizone.common.calendercategoryboard.model.vo.CalenderCategoryBoard" alias="CalenderCategoryBoard" />	
+		<typeAlias type="com.h2.chuizone.calender.model.dto.CalenderDto" alias="CalenderDto" />
+		<typeAlias type="com.h2.chuizone.customerServicePage.model.dto.InquiryBoardDto" alias="InquiryBoardDto" />
+		<typeAlias type="com.h2.chuizone.customerServicePage.model.vo.InquiryBoard" alias="InquiryBoard" />
+	</typeAliases>
+	<environments default="develop">
+		<environment id="develop">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+		    	<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+		    	<property name="url" value="jdbc:oracle:thin:@cjy951213.iptime.org:1521:xe"/>
+		    	<property name="username" value="hobby"/>
+		    	<property name="password" value="harvest"/>
+		    </dataSource>			
+		</environment>
+	</environments>
+	
+	<mappers>
+		<mapper resource="/mapper/member-review-recommand-mapper.xml"/>
+		<mapper resource="/mapper/member-mapper.xml"/>
+		<mapper resource="/mapper/board-review-mapper.xml"/>
+		<mapper resource="/mapper/review-mapper.xml"/>
+		<mapper resource="/mapper/member-club-mapper.xml"/>
+		<mapper resource="/mapper/reply-mapper.xml"/>
+		<mapper resource="/mapper/category-mapper.xml"/>
+		<mapper resource="/mapper/category-board-mapper.xml"/>
+		<mapper resource="/mapper/small-group-mapper.xml"/>
+		<mapper resource="/mapper/board-mapper.xml"/>
+		<mapper resource="/mapper/board-category-board-mapper.xml"/>
+		<mapper resource="/mapper/club-mapper.xml"/>
+		<mapper resource="/mapper/calendar-mapper.xml"/>
+		<mapper resource="/mapper/calendar-category-board-mapper.xml"/>
+		<mapper resource="/mapper/board-calendar-mapper.xml"/>
+		<mapper resource="/mapper/kind-of-board-mapper.xml"/>
+		<mapper resource="/mapper/small-group-category-mapper.xml"/>
+		<mapper resource="/mapper/category-board-recommand-mapper.xml"/>
+		<mapper resource="/mapper/category-board-complain-mapper.xml"/>
+		<mapper resource="/mapper/book-category-mapper.xml"/>
+	</mappers>
+</configuration>

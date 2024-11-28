@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="categoryBoardMapper">
+  
+  <select id="selectMaxPageNumber" parameterType="hashmap" resultType="int">
+    SELECT COUNT(*) FROM BoardCategoryBoard BCB JOIN CategoryBoard CB ON (BCB.CBNO = CB.CBNO)
+ 	JOIN Board B ON (BCB.BNO = B.BNO) JOIN SmallGroupCategory SGC ON (SGC.SGCNO = CB.SGCNO) JOIN Category CE ON (CE.CATENO = SGC.CATENO) WHERE STATUS = 'N' AND CE.CATENO = #{categoryNO}
+  </select>
+  
+  <select id="selectMaxPageNumberKeyword" parameterType="hashmap" resultType="int">
+    SELECT COUNT(*) FROM BoardCategoryBoard BCB JOIN CategoryBoard CB ON (BCB.CBNO = CB.CBNO)
+ 	JOIN Board B ON (BCB.BNO = B.BNO) JOIN SmallGroupCategory SGC ON (SGC.SGCNO = CB.SGCNO) JOIN Category CE ON (CE.CATENO = SGC.CATENO) WHERE B.BTITLE LIKE '%' ||  #{keyword} || '%' AND STATUS = 'N' AND CE.CATENO = #{categoryNO}
+  </select>
+
+  <insert id="insertCategoryBoard" parameterType="CategoryBoard">
+  	INSERT INTO CategoryBoard(CBNO, CNO, KBNO, SGCNO, CBIMG, MAX_COUNT) VALUES(SEQ_CBNO.NEXTVAL, #{clubNo}, #{kindOfBoardNo}, #{smallGroupCategoryNo}, #{mainImg}, #{maxHeadCnt})
+  	<selectKey resultType="java.lang.Integer" keyProperty="categoryBoardNo" order="AFTER">
+            SELECT SEQ_CBNO.CURRVAL FROM DUAL
+    </selectKey>
+  </insert>
+  
+  <update id="updateCategoryBoardByCurCount" parameterType="hashmap">
+  	UPDATE CategoryBoard SET CUR_COUNT = #{currentHeadCnt} WHERE CBNO = (SELECT CBNO FROM BoardCategoryBoard WHERE BNO = #{boardNo})
+  </update>
+  
+  <update id="updateCategoryBoardByView" parameterType="hashmap">
+  	UPDATE CategoryBoard SET VIEWS = #{viewCnt} WHERE CBNO = (SELECT CBNO FROM BoardCategoryBoard WHERE BNO = #{boardNo})
+  </update>
+  
+  <update id="updateCategoryBoardByRecommandPlus" parameterType="int">
+  	UPDATE CategoryBoard SET RCNO = RCNO + 1 WHERE CBNO = #{categoryNo}
+  </update>
+  
+  <update id="updateCategoryBoardByRecommandMinus" parameterType="int">
+  	UPDATE CategoryBoard SET RCNO = RCNO - 1 WHERE CBNO = #{categoryNo}
+  </update>
+  
+  <update id="updateCategoryBoardByComplainPlus" parameterType="int">
+  	UPDATE CategoryBoard SET COMPLAIN = COMPLAIN + 1 WHERE CBNO = #{categoryNo}
+  </update>
+  
+  <update id="updateCategoryBoardByComplainMinus" parameterType="int">
+  	UPDATE CategoryBoard SET COMPLAIN = COMPLAIN - 1 WHERE CBNO = #{categoryNo}
+  </update>
+  
+  <update id="updateCategoryBoard" parameterType="hashmap">
+  	UPDATE CategoryBoard SET SGCNO = #{smallGroupCategoryNo}, CBIMG = #{categoryImage}, MAX_COUNT = #{maxCount} WHERE CBNO = #{categoryBoardNo}
+  </update>
+  
+</mapper>
